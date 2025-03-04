@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-container h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-container ul {
+            list-style: none;
+            padding: 0;
+        }
+        .form-container li {
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .form-container input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-container input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .form-container input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        function openModal(result) {
+            // Get the modal element and show it
+            var modal = document.getElementById("resultModal");
+            var modalBody = document.getElementById("modal-body");
+            
+            // Display the results in the modal body
+            if(result >= 0 && result <= 50) {
+                modalBody.innerHTML = "<p>The air quality is <strong>Good</strong> with an AQI of " + result + ". This is within the normal range.</p>";
+            } else if(result > 50 && result <= 100) {
+                modalBody.innerHTML = "<p>The air quality is <strong>Moderate</strong> with an AQI of " + result + ". Consider limiting prolonged outdoor exertion.</p>";
+            } else if(result > 100 && result <= 150) {
+                modalBody.innerHTML = "<p>The air quality is <strong>Unhealthy for Sensitive Groups</strong> with an AQI of " + result + ". People with respiratory conditions may want to limit exposure.</p>";
+            } else {
+                modalBody.innerHTML = "<p>The air quality is <strong>Unhealthy</strong> with an AQI of " + result + ". Everyone should avoid outdoor exertion.</p>";
+            }
+            modal.style.display = "block";
+        }
+
+        function closeModal() {
+            var modal = document.getElementById("resultModal");
+            modal.style.display = "none";
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="form-container">
+        <h2>Air Quality Predictor</h2>
+        <form action="/" method="POST" onsubmit="event.preventDefault(); openModal(75);">
+            <ul>
+                <li>
+                    <label for="c1">Time:</label>
+                    <input type="text" name="c1" id="c1" placeholder="Enter time" required>
+                </li>
+                <li>
+                    <label for="c2">CO Content:</label>
+                    <input type="text" name="c2" id="c2" placeholder="Enter CO content" required>
+                </li>
+                <li>
+                    <label for="c3">Benzene Content:</label>
+                    <input type="text" name="c3" id="c3" placeholder="Enter Benzene content" required>
+                </li>
+                <li>
+                    <label for="c4">NMHC Content:</label>
+                    <input type="text" name="c4" id="c4" placeholder="Enter NMHC content" required>
+                </li>
+                <li>
+                    <label for="c5">Nitrogen Oxide Content:</label>
+                    <input type="text" name="c5" id="c5" placeholder="Enter Nitrogen Oxide content" required>
+                </li>
+                <li>
+                    <label for="c6">NOx Content:</label>
+                    <input type="text" name="c6" id="c6" placeholder="Enter NOx content" required>
+                </li>
+                <li>
+                    <label for="c7">NO2 Content:</label>
+                    <input type="text" name="c7" id="c7" placeholder="Enter NO2 content" required>
+                </li>
+                <li>
+                    <label for="c8">NO2 Particulate Content:</label>
+                    <input type="text" name="c8" id="c8" placeholder="Enter NO2 particulate content" required>
+                </li>
+                <li>
+                    <label for="c9">Ozone Content:</label>
+                    <input type="text" name="c9" id="c9" placeholder="Enter Ozone content" required>
+                </li>
+                <li>
+                    <label for="c10">Temperature:</label>
+                    <input type="text" name="c10" id="c10" placeholder="Enter Temperature" required>
+                </li>
+                <li>
+                    <label for="c11">AH Content:</label>
+                    <input type="text" name="c11" id="c11" placeholder="Enter AH content" required>
+                </li>
+                <li>
+                    <input type="submit" value="Submit">
+                </li>
+            </ul>
+        </form>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+{% endblock %}
