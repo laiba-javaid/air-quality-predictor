@@ -9,7 +9,7 @@ model = pickle.load(open("model/AirQualityPredictor.sav", "rb"))
 # Streamlit UI
 st.markdown("""
     <h1 style='text-align: center;'>🌍 Air Quality Predictor</h1>
-    <p style='text-align: center;'>Enter air quality parameters to predict AQI.</p>
+    <p style='text-align: center;'>Enter air quality parameters to predict AQI (Air Quality Index).</p>
 """, unsafe_allow_html=True)
 # User inputs
 pm25 = st.number_input("PM2.5 Level", min_value=0.0, step=0.1)
