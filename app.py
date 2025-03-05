@@ -1,36 +1,36 @@
-from flask import Flask, request,render_template
-from sklearn.linear_model import LinearRegression
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-import pickle 
+import streamlit as st
+import pandas as pd
+import pickle
+import numpy as np
 
-app = Flask(__name__) 
+# Load trained model
+model = pickle.load(open("model/AirQualityPredictor.sav", "rb"))
 
-@app.route('/success/<name>') 
-def success(name): 
-   return 'welcome %s' % name 
-  
-@app.route('/', methods=['POST', 'GET'])
-def index():
-    if request.method == 'POST':
-        time = float(request.form['c1'])
-        CO_GT = float(request.form['c2'])
-        C6h_GT = float(request.form['c3'])
-        PT08_S2 = float(request.form['c4'])
-        NOx = float(request.form['c5'])
-        PT08_S3 = float(request.form['c6'])
-        NO2x = float(request.form['c7'])
-        PT08_s4 = float(request.form['c8'])
-        PT08_s5 = float(request.form['c9'])
-        T = float(request.form['c10'])
-        AH = float(request.form['c11'])
-        ls=[[time,CO_GT,C6h_GT,PT08_S2,NOx,PT08_S3,NO2x,PT08_s4,PT08_s5,T,AH]]
-        lm=pickle.load(open('model/AirQualityPredictor.sav','rb'))
-        x=lm.predict(ls)
-        return 'answer is %f' %x
-    else:
-        return render_template('index.html')
+# Streamlit UI
+st.markdown("""
+    <h1 style='text-align: center;'>🌍 Air Quality Predictor</h1>
+    <p style='text-align: center;'>Enter air quality parameters to predict AQI.</p>
+""", unsafe_allow_html=True)
+# User inputs
+pm25 = st.number_input("PM2.5 Level", min_value=0.0, step=0.1)
+pm10 = st.number_input("PM10 Level", min_value=0.0, step=0.1)
+no = st.number_input("NO Level", min_value=0.0, step=0.1)
+no2 = st.number_input("NO2 Level", min_value=0.0, step=0.1)
+nox = st.number_input("NOx Level", min_value=0.0, step=0.1)
+nh3 = st.number_input("NH3 Level", min_value=0.0, step=0.1)
+so2 = st.number_input("SO2 Level", min_value=0.0, step=0.1)
+co = st.number_input("CO Level", min_value=0.0, step=0.1)
+o3 = st.number_input("O3 Level", min_value=0.0, step=0.1)
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# Predict AQI on button click
+if st.button("Predict AQI"):
+    # Convert input to DataFrame
+    input_data = pd.DataFrame([[pm25, pm10, no, no2, nox, nh3, so2, co, o3]], 
+                               columns=['PM2.5', 'PM10', 'NO', 'NO2', 'NOx', 'NH3', 'SO2', 'CO', 'O3'])
+    
+    # Predict AQI
+    predicted_aqi = model.predict(input_data)[0]
+
+    # Display result in dialog box
+    st.success(f"🌟 Predicted AQI: {predicted_aqi:.2f}")
